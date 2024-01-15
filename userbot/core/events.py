@@ -369,9 +369,9 @@ async def edit_message(
 ):
     chatid = entity
     if isinstance(chatid, InputPeerChannel):
-        chat_id = int("-100" + str(chatid.channel_id))
+        chat_id = int(f"-100{str(chatid.channel_id)}")
     elif isinstance(chatid, InputPeerChat):
-        chat_id = int("-" + str(chatid.chat_id))
+        chat_id = int(f"-{str(chatid.chat_id)}")
     elif isinstance(chatid, InputPeerUser):
         chat_id = int(chatid.user_id)
     else:
@@ -409,7 +409,7 @@ async def edit_message(
         return await client.editmessage(
             entity=chatid,
             message=message,
-            text=msg,
+            main_msg=msg,
             parse_mode=parse_mode,
             formatting_entities=formatting_entities,
             link_preview=link_preview,
@@ -421,7 +421,7 @@ async def edit_message(
     return await client.editmessage(
         entity=chatid,
         message=message,
-        text=main_msg,
+        main_msg=main_msg,
         parse_mode=parse_mode,
         formatting_entities=formatting_entities,
         link_preview=link_preview,

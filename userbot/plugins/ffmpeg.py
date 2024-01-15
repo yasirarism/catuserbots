@@ -51,9 +51,7 @@ async def cult_small_video(
     )
     # Wait for the subprocess to finish
     await process.communicate()
-    if os.path.lexists(out_put_file_name):
-        return out_put_file_name
-    return None
+    return out_put_file_name if os.path.lexists(out_put_file_name) else None
 
 
 @catub.cat_cmd(
@@ -136,9 +134,7 @@ async def ff_mpeg_trim_cmd(event):
             end_time,
         )
         if o is None:
-            return await edit_delete(
-                catevent, f"**Error : **`Can't complete the process`"
-            )
+            return await edit_delete(catevent, "**Error : **`Can't complete the process`")
         try:
             c_time = time.time()
             await event.client.send_file(

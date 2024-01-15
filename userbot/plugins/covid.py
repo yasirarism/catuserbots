@@ -39,7 +39,7 @@ async def corona(event):
         data += f"\n🥺 New Cases   : <code>{country_data['new_cases']}</code>"
         data += f"\n😟 New Deaths : <code>{country_data['new_deaths']}</code>"
         await catevent.edit(
-            "<b>Corona Virus Info of {}:\n{}</b>".format(country, data),
+            f"<b>Corona Virus Info of {country}:\n{data}</b>",
             parse_mode="html",
         )
     else:
@@ -60,8 +60,6 @@ async def corona(event):
         else:
             await edit_delete(
                 catevent,
-                "`Corona Virus Info of {} is not avaiable or unable to fetch`".format(
-                    country
-                ),
+                f"`Corona Virus Info of {country} is not avaiable or unable to fetch`",
                 5,
             )

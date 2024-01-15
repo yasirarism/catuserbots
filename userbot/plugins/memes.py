@@ -42,8 +42,7 @@ async def get_user(event):
 
             if isinstance(probable_user_mention_entity, MessageEntityMentionName):
                 user_id = probable_user_mention_entity.user_id
-                replied_user = await event.client(GetFullUserRequest(user_id))
-                return replied_user
+                return await event.client(GetFullUserRequest(user_id))
         try:
             user_object = await event.client.get_entity(user)
             replied_user = await event.client(GetFullUserRequest(user_object.id))
@@ -245,8 +244,10 @@ async def shout(args):
     for messagestr in words:
         text = " ".join(messagestr)
         result = [" ".join(text)]
-        for pos, symbol in enumerate(text[1:]):
-            result.append(symbol + " " + "  " * pos + symbol)
+        result.extend(
+            f"{symbol} " + "  " * pos + symbol
+            for pos, symbol in enumerate(text[1:])
+        )
         result = list("\n".join(result))
         result[0] = text[0]
         result = "".join(result)
@@ -280,9 +281,9 @@ async def faces(owo):
     reply_text = re.sub(r"(R|L)", "W", reply_text)
     reply_text = re.sub(r"n([aeiou])", r"ny\1", reply_text)
     reply_text = re.sub(r"N([aeiouAEIOU])", r"Ny\1", reply_text)
-    reply_text = re.sub(r"\!+", " " + random.choice(catmemes.UWUS), reply_text)
+    reply_text = re.sub(r"\!+", f" {random.choice(catmemes.UWUS)}", reply_text)
     reply_text = reply_text.replace("ove", "uv")
-    reply_text += " " + random.choice(catmemes.UWUS)
+    reply_text += f" {random.choice(catmemes.UWUS)}"
     await edit_or_reply(owo, reply_text)
 
 
@@ -332,7 +333,7 @@ async def smrk(smk):
         await edit_or_reply(smk, "ツ")
         return
     if message == "dele":
-        await edit_or_reply(smk, message + "te the hell" + "ツ")
+        await edit_or_reply(smk, f"{message}te the hellツ")
     else:
         smirk = " ツ"
         reply_text = message + smirk
@@ -352,20 +353,7 @@ async def smrk(smk):
 async def payf(event):
     "Pay Respects."
     paytext = event.pattern_match.group(1)
-    pay = "{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}\n{}".format(
-        paytext * 8,
-        paytext * 8,
-        paytext * 2,
-        paytext * 2,
-        paytext * 2,
-        paytext * 6,
-        paytext * 6,
-        paytext * 2,
-        paytext * 2,
-        paytext * 2,
-        paytext * 2,
-        paytext * 2,
-    )
+    pay = f"{paytext * 8}\n{paytext * 8}\n{paytext * 2}\n{paytext * 2}\n{paytext * 2}\n{paytext * 6}\n{paytext * 6}\n{paytext * 2}\n{paytext * 2}\n{paytext * 2}\n{paytext * 2}\n{paytext * 2}"
     await edit_or_reply(event, pay)
 
 
@@ -416,8 +404,7 @@ async def _(event):
             event, "`either reply to text message or give input to search`", 5
         )
     sample_url = f"https://da.gd/s?url=https://lmgtfy.com/?q={input_str.replace(' ', '+')}%26iie=1"
-    response_api = requests.get(sample_url).text
-    if response_api:
+    if response_api := requests.get(sample_url).text:
         await edit_or_reply(
             event, f"[{input_str}]({response_api.rstrip()})\n`Thank me Later 🙃` "
         )
@@ -456,8 +443,6 @@ async def gbun(event):
     if event.reply_to_msg_id:
         reply_message = await event.get_reply_message()
         replied_user = await event.client(GetFullUserRequest(reply_message.sender_id))
-        firstname = replied_user.user.first_name
-        usname = replied_user.user.username
         idd = reply_message.sender_id
         # make meself invulnerable cuz why not xD
         if idd == 1035034432:
@@ -465,20 +450,16 @@ async def gbun(event):
                 "`Wait a second, This is my master!`\n**How dare you threaten to ban my master nigger!**\n\n__Your account has been hacked! Pay 69$ to my master__ [π.$](tg://user?id=1035034432) __to release your account__😏"
             )
         else:
-            jnl = (
-                "`Warning!! `"
-                "[{}](tg://user?id={})"
-                "` 𝙂𝘽𝘼𝙉𝙉𝙀𝘿 By Admin...\n\n`"
-                "**user's Name: ** __{}__\n"
-                "**ID : ** `{}`\n"
-            ).format(firstname, idd, firstname, idd)
+            firstname = replied_user.user.first_name
+            jnl = f"`Warning!! `[{firstname}](tg://user?id={idd})` 𝙂𝘽𝘼𝙉𝙉𝙀𝘿 By Admin...\n\n`**user's Name: ** __{firstname}__\n**ID : ** `{idd}`\n"
+            usname = replied_user.user.username
             if usname is None:
                 jnl += "**Victim Nigga's username: ** `Doesn't own a username!`\n"
             else:
-                jnl += "**Victim Nigga's username** : @{}\n".format(usname)
+                jnl += f"**Victim Nigga's username** : @{usname}\n"
             if len(gbunVar) > 0:
-                gbunm = "`{}`".format(gbunVar)
-                gbunr = "**Reason: **" + gbunm
+                gbunm = f"`{gbunVar}`"
+                gbunr = f"**Reason: **{gbunm}"
                 jnl += gbunr
             else:
                 no_reason = "__Reason: Potential spammer. __"

@@ -41,7 +41,7 @@ async def get_cast(casttype, movie):
             if i < 1:
                 mov_casttype += str(j)
             elif i < 5:
-                mov_casttype += ", " + str(j)
+                mov_casttype += f", {str(j)}"
             else:
                 break
             i += 1
@@ -223,10 +223,7 @@ async def unzip(downloaded_file_name):
 async def covidindia(state):
     url = "https://www.mohfw.gov.in/data/datanew.json"
     req = requests.get(url).json()
-    for i in states:
-        if i == state:
-            return req[states.index(i)]
-    return None
+    return next((req[states.index(i)] for i in states if i == state), None)
 
 
 async def hide_inlinebot(borg, bot_name, text, chat_id, reply_to_id, c_lick=0):
