@@ -64,21 +64,17 @@ async def _(event):
             chat, filter=ChannelParticipantsAdmins
         ):
             if not x.deleted and isinstance(x.participant, ChannelParticipantCreator):
-                mentions += "\n 👑 [{}](tg://user?id={}) `{}`".format(
-                    x.first_name, x.id, x.id
-                )
+                mentions += f"\n 👑 [{x.first_name}](tg://user?id={x.id}) `{x.id}`"
         mentions += "\n"
         async for x in event.client.iter_participants(
             chat, filter=ChannelParticipantsAdmins
         ):
             if x.deleted:
-                mentions += "\n `{}`".format(x.id)
+                mentions += f"\n `{x.id}`"
             elif isinstance(x.participant, ChannelParticipantAdmin):
-                mentions += "\n ⚜️ [{}](tg://user?id={}) `{}`".format(
-                    x.first_name, x.id, x.id
-                )
+                mentions += f"\n ⚜️ [{x.first_name}](tg://user?id={x.id}) `{x.id}`"
     except Exception as e:
-        mentions += " " + str(e) + "\n"
+        mentions += f" {str(e)}" + "\n"
     await event.client.send_message(event.chat_id, mentions, reply_to=reply_message)
     await event.delete()
 
@@ -99,29 +95,24 @@ async def _(event):
 async def _(event):
     "To get list of bots."
     mentions = "**Bots in this Group**: \n"
-    input_str = event.pattern_match.group(1)
-    if not input_str:
-        chat = await event.get_input_chat()
-    else:
-        mentions = "Bots in {} Group: \n".format(input_str)
+    if input_str := event.pattern_match.group(1):
+        mentions = f"Bots in {input_str} Group: \n"
         try:
             chat = await event.client.get_entity(input_str)
         except Exception as e:
             return await edit_or_reply(event, str(e))
+    else:
+        chat = await event.get_input_chat()
     try:
         async for x in event.client.iter_participants(
             chat, filter=ChannelParticipantsBots
         ):
             if isinstance(x.participant, ChannelParticipantAdmin):
-                mentions += "\n ⚜️ [{}](tg://user?id={}) `{}`".format(
-                    x.first_name, x.id, x.id
-                )
+                mentions += f"\n ⚜️ [{x.first_name}](tg://user?id={x.id}) `{x.id}`"
             else:
-                mentions += "\n [{}](tg://user?id={}) `{}`".format(
-                    x.first_name, x.id, x.id
-                )
+                mentions += f"\n [{x.first_name}](tg://user?id={x.id}) `{x.id}`"
     except Exception as e:
-        mentions += " " + str(e) + "\n"
+        mentions += f" {str(e)}" + "\n"
     await edit_or_reply(event, mentions)
 
 
@@ -142,9 +133,8 @@ async def get_users(show):
     "To get list of Users."
     mentions = "**Users in this Group**: \n"
     await reply_id(show)
-    input_str = show.pattern_match.group(1)
-    if input_str:
-        mentions = "Users in {} Group: \n".format(input_str)
+    if input_str := show.pattern_match.group(1):
+        mentions = f"Users in {input_str} Group: \n"
         try:
             chat = await show.client.get_entity(input_str)
         except Exception as e:
@@ -170,7 +160,7 @@ async def get_users(show):
                         f"\n[{user.first_name}](tg://user?id={user.id}) `{user.id}`"
                     )
     except Exception as e:
-        mentions += " " + str(e) + "\n"
+        mentions += f" {str(e)}" + "\n"
     await edit_or_reply(catevent, mentions)
 
 
@@ -363,8 +353,8 @@ async def fetch_info(chat, event):  # sourcery no-metrics
         if hasattr(chat_obj_info, "verified") and chat_obj_info.verified
         else "No"
     )
-    username = "@{}".format(username) if username else None
-    creator_username = "@{}".format(creator_username) if creator_username else None
+    username = f"@{username}" if username else None
+    creator_username = f"@{creator_username}" if creator_username else None
     # end of spaghetti block
 
     if admins is None:

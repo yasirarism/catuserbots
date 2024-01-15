@@ -139,9 +139,8 @@ Don't spam my inbox. say reason and wait until my response.__"""
             )
             msg = await results[0].click(chat.id, reply_to=reply_to_id, hide_via=True)
         else:
-            PM_PIC = gvarstatus("pmpermit_pic")
-            if PM_PIC:
-                CAT = [x for x in PM_PIC.split()]
+            if PM_PIC := gvarstatus("pmpermit_pic"):
+                CAT = list(PM_PIC.split())
                 PIC = list(CAT)
                 CAT_IMG = random.choice(PIC)
             else:

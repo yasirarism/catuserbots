@@ -34,8 +34,8 @@ plugin_category = "fun"
 def random_color():
     number_of_colors = 2
     return [
-        "#" + "".join(random.choice("0123456789ABCDEF") for j in range(6))
-        for i in range(number_of_colors)
+        "#" + "".join(random.choice("0123456789ABCDEF") for _ in range(6))
+        for _ in range(number_of_colors)
     ]
 
 
@@ -112,7 +112,7 @@ async def maccmd(event):  # sourcery no-metrics
     output = io.BytesIO()
     output.name = (
         "-".join(
-            "".join(random.choice(string.hexdigits) for img in range(event))
+            "".join(random.choice(string.hexdigits) for _ in range(event))
             for event in [5, 4, 3, 2, 1]
         )
         + ".png"
